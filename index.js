@@ -5,6 +5,19 @@ const db = require('cyclic-dynamodb')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// allowing multiple origins
+app.use((req, res, next) => {
+  const allowedOrigins = ['*'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  return next(); 
+});
+
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
 // listed in the array.
@@ -64,19 +77,6 @@ app.get('/:col', async (req, res) => {
 app.use('*', (req, res) => {
   res.json({ msg: 'no route handler found' }).end()
 })
-
-// allowing multiple origins
-app.use((req, res, next) => {
-  const allowedOrigins = ['*'];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-       res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  return next(); 
-});
 
 // Start the server
 const port = process.env.PORT || 3000
