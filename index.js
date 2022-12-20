@@ -67,7 +67,7 @@ app.use('*', (req, res) => {
 
 // allowing multiple origins
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:4200', 'http://127.0.0.1:3000'];
+  const allowedOrigins = ['*'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
        res.setHeader('Access-Control-Allow-Origin', origin);
