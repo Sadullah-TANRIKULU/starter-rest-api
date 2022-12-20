@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // allowing multiple origins
 app.use((req, res, next) => {
-  const allowedOrigins = ['*'];
+  const allowedOrigins = ['http:localhost:5500'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
        res.setHeader('Access-Control-Allow-Origin', origin);
