@@ -25,7 +25,7 @@ app.post('/:col/:key', async (req, res) => {
 
   const col = req.params.col
   const key = req.params.key
-  console.log(`from collection: ${col} delete key: ${key} with params ${JSON.stringify(req.params)}`)
+  console.log(`from collection: ${col} post key: ${key} with params ${JSON.stringify(req.params)}`)
   const item = await db.collection(col).set(key, req.body)
   console.log(JSON.stringify(item, null, 2))
   res.json(item).end()
@@ -64,6 +64,19 @@ app.get('/:col', async (req, res) => {
 app.use('*', (req, res) => {
   res.json({ msg: 'no route handler found' }).end()
 })
+
+// allowing multiple origins
+app.use((req, res, next) => {
+  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:4200', 'http://127.0.0.1:3000'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+       res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  return next(); 
+});
 
 // Start the server
 const port = process.env.PORT || 3000
