@@ -4,8 +4,9 @@ const cors = require("cors");
 const CyclicDb = require("@cyclic.sh/dynamodb");
 const db = CyclicDb("alert-gray-hippoCyclicDB");
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(cors()); // allow all cors
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // allowing multiple origins
 // app.use((req, res, next) => {
@@ -15,10 +16,12 @@ app.use(express.urlencoded({ extended: true }))
 //        res.setHeader('Access-Control-Allow-Origin', origin);
 //   }
 //   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
-//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
 //   res.header('Access-Control-Allow-Credentials', true);
 //   return next(); 
 // });
+
+
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -67,7 +70,7 @@ app.get('/:col/:key', async (req, res) => {
 })
 
 // Get a full listing
-app.get('/:col', cors(), async (req, res) => {
+app.get('/:col', async (req, res) => {
   const col = req.params.col
   console.log(`list collection: ${col} with params: ${JSON.stringify(req.params)}`)
   const items = await db.collection(col).list()
