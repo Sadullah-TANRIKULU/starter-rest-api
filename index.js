@@ -1,23 +1,24 @@
-const express = require('express')
-const app = express()
-const CyclicDb = require("@cyclic.sh/dynamodb")
-const db = CyclicDb("alert-gray-hippoCyclicDB")
+const express = require('express');
+const app = express();
+const cors = require("cors");
+const CyclicDb = require("@cyclic.sh/dynamodb");
+const db = CyclicDb("alert-gray-hippoCyclicDB");
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 // allowing multiple origins
-app.use((req, res, next) => {
-  const allowedOrigins = ['http:localhost:5500'];
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-       res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', true);
-  return next(); 
-});
+// app.use((req, res, next) => {
+//   const allowedOrigins = ['*'];
+//   const origin = req.headers.origin;
+//   if (allowedOrigins.includes(origin)) {
+//        res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
+//   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST, PUT, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.header('Access-Control-Allow-Credentials', true);
+//   return next(); 
+// });
 
 // #############################################################################
 // This configures static hosting for files in /public that have the extensions
@@ -66,7 +67,7 @@ app.get('/:col/:key', async (req, res) => {
 })
 
 // Get a full listing
-app.get('/:col', async (req, res) => {
+app.get('/:col', cors(), async (req, res) => {
   const col = req.params.col
   console.log(`list collection: ${col} with params: ${JSON.stringify(req.params)}`)
   const items = await db.collection(col).list()
